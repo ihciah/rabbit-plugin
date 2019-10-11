@@ -1,6 +1,6 @@
 # Rabbit TCP SIP003 Plugin
 
-A shadowsocks plugin with rabbit-tcp support.
+A shadowsocks plugin with [rabbit-tcp](https://github.com/ihciah/rabbit-tcp) support.
 
 Currently only client mode is supported. And currently this project is very unstable.
 
@@ -17,7 +17,7 @@ Currently only client mode is supported. And currently this project is very unst
 
 (You may have to write configure files by your own)
 
-#### Choice 1: Run with docker (Recommended)
+#### Choice 2: Run with docker (Recommended)
 1. Install docker and docker-compose if you don\'t have them
 2. Download [docker-compose file](https://github.com/ihciah/rabbit-tcp/blob/master/docker-compose-server.yml)
 3. Modify it and `docker-compose -f docker-compose-server.yml up -d`
