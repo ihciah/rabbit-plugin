@@ -1,5 +1,7 @@
 # Rabbit TCP SIP003 Plugin
 
+![BuildBadge](https://github.com/ihciah/rabbit-plugin/workflows/Build/badge.svg)
+
 A shadowsocks plugin with [rabbit-tcp](https://github.com/ihciah/rabbit-tcp) support.
 
 Currently only client mode is supported. And currently this project is very unstable.
