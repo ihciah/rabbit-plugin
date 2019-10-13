@@ -1,12 +1,45 @@
-rabbit-plugin:
-	go build -o bin/rabbit-plugin .
+NAME=rabbit-plugin
+BINDIR=bin
+GOBUILD=CGO_ENABLED=0 go build -ldflags '-w -s'
+BUILDFILE=.
+# The -w and -s flags reduce binary sizes by excluding unnecessary symbols and debug info
 
-release:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -o bin/rabbit-plugin-linux-amd64 .
-	CGO_ENABLED=0 GOOS=linux GOARCH=386 go build -a -ldflags '-extldflags "-static"' -o bin/rabbit-plugin-linux-386 .
-	CGO_ENABLED=0 GOOS=linux GOARCH=arm go build -a -ldflags '-extldflags "-static"' -o bin/rabbit-plugin-linux-arm .
-	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -a -ldflags '-extldflags "-static"' -o bin/rabbit-plugin-linux-arm64 .
-	CGO_ENABLED=0 GOOS=windows GOARCH=386 go build -a -ldflags '-extldflags "-static"' -o bin/rabbit-plugin-windows-386.exe .
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -o bin/rabbit-plugin-windows-amd64.exe .
-	CGO_ENABLED=0 GOOS=darwin GOARCH=386 go build -a -ldflags '-extldflags "-static"' -o bin/rabbit-plugin-darwin-386 .
-	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -o bin/rabbit-plugin-darwin-amd64 .
+all: linux-amd64 linux-386 linux-arm64 linux-arm darwin-amd64 darwin-386 windows-amd64 windows-386
+
+linux-amd64:
+	GOARCH=amd64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@ $(BUILDFILE)
+
+linux-386:
+	GOARCH=386 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@ $(BUILDFILE)
+
+linux-arm64:
+	GOARCH=arm64 GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@ $(BUILDFILE)
+
+linux-arm:
+	GOARCH=arm GOOS=linux $(GOBUILD) -o $(BINDIR)/$(NAME)-$@ $(BUILDFILE)
+
+darwin-amd64:
+	GOARCH=amd64 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$(NAME)-$@ $(BUILDFILE)
+
+darwin-386:
+	GOARCH=386 GOOS=darwin $(GOBUILD) -o $(BINDIR)/$(NAME)-$@ $(BUILDFILE)
+
+windows-amd64:
+	GOARCH=amd64 GOOS=windows $(GOBUILD) -o $(BINDIR)/$(NAME)-$@.exe $(BUILDFILE)
+
+windows-386:
+	GOARCH=386 GOOS=windows $(GOBUILD) -o $(BINDIR)/$(NAME)-$@.exe $(BUILDFILE)
+
+releases: linux-amd64 linux-386 linux-arm64 linux-arm darwin-amd64 darwin-386 windows-amd64 windows-386
+	chmod +x $(BINDIR)/$(NAME)-*
+	gzip $(BINDIR)/$(NAME)-linux-amd64
+	gzip $(BINDIR)/$(NAME)-linux-386
+	gzip $(BINDIR)/$(NAME)-linux-arm64
+	gzip $(BINDIR)/$(NAME)-linux-arm
+	gzip $(BINDIR)/$(NAME)-darwin-amd64
+	gzip $(BINDIR)/$(NAME)-darwin-386
+	zip -m -j $(BINDIR)/$(NAME)-windows-amd64.zip $(BINDIR)/$(NAME)-windows-amd64.exe
+	zip -m -j $(BINDIR)/$(NAME)-windows-386.zip $(BINDIR)/$(NAME)-windows-386.exe
+
+clean:
+	rm $(BINDIR)/*
