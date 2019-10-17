@@ -29,7 +29,7 @@ func main() {
 }
 
 func startServer(opts Args) {
-
+	log.Println("Server mode is not implemented yet.")
 }
 
 func startClient(opts Args) {
