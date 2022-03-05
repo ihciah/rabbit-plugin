@@ -77,6 +77,12 @@ func parseEnv() (opts Args, err error) {
 	if len(ss_local_host) == 0 {
 		return
 	}
+	if strings.IndexByte(ss_remote_host, ':') != -1 {
+	    ss_remote_host = "[" + ss_remote_host + "]"
+	}
+	if strings.IndexByte(ss_local_host, ':') != -1 {
+	    ss_local_host = "[" + ss_local_host + "]"
+	}
 
 	opts.Add("remoteAddr", ss_remote_host)
 	opts.Add("remotePort", ss_remote_port)
